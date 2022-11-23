@@ -11,7 +11,7 @@ function love.load()
     VelocityOnClick = 520
 
     Player = Boid:create(13)
-    Pipes = Field:create(-250, -1, 550, 150, 60, 80, 30)
+    Pipes = Field:create(250, 550, 150, 60, 80, 30, 0.003, 1000, 2)
     Pipes:init()
 end
 
