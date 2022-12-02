@@ -83,3 +83,7 @@ end
 function Vector:distTo(other)
     return math.sqrt((other.x - self.x) * (other.x - self.x) + (other.y - self.y) * (other.y - self.y))
 end
+
+function dotProduct(vec1, vec2)
+    return (vec1.x * vec2.x + vec1.y * vec2.y)
+end
