@@ -16,7 +16,7 @@ end
 function CollisionDetector:update()
     for _, player in pairs(self.trackablePlayers) do
         if (self:fieldsCollisionCheckOnPlayer(player) or self:bordersCollisionCheckOnPlayer(player)) then
-            -- gimmic condition
+            -- gimmick condition
         end
     end
 end
