@@ -49,12 +49,12 @@ function love.draw()
 end
 
 function love.mousepressed(x, y, button)
-    if button == 1 then
+    if Flag and button == 1 then
 		Player.velocity.y = -VelocityOnClick
     end
 end
 
-function onCollision(player, index, rect)
+function onCollision(player, field, index, rect)
     Flag = false
     player.color = {1, 0, 0, 1}
 end

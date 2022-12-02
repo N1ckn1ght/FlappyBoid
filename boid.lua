@@ -31,11 +31,11 @@ end
 
 function Boid:draw()
     local fakeVelocity = Vector:create(300, self.velocity.y)
-    local angle = fakeVelocity:heading() + math.pi / 2
+    self.angle = fakeVelocity:heading() + math.pi / 2
     -- save coordinate system
     love.graphics.push()
     love.graphics.translate(self.location.x, self.location.y)
-    love.graphics.rotate(angle)
+    love.graphics.rotate(self.angle)
 
     -- save love graphics color
     local r, g, b, a = love.graphics.getColor()

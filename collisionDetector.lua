@@ -59,8 +59,8 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player)
                 for k = 1, #player.hitboxes do
                     local npp = npps[k]
 
-                    for _, np in pairs({npp, nf}) do
-                        for _, v in pairs(np) do
+                    for k1, np in pairs({npp, npf}) do
+                        for k2, v in pairs(np) do
                             local p = player:getMinMaxProj(k, v)
                             local q = field:getMinMaxProj(index, j, v)
 
@@ -75,7 +75,7 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player)
                     end
 
                     if (col) then
-                        onCollision(player, index, rect)
+                        onCollision(player, field, index, j)
                         return true
                     end
                 end

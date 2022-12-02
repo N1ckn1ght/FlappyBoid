@@ -105,7 +105,13 @@ function Field:getNormals(index, rect)
         current_dot = self:getDot(index, rect, i)
         local px = current_dot.x - previous_dot.x
         local py = current_dot.y - previous_dot.y
-        normals[i] = Vector:create(-py, px)
+        
+        -- clockwise, else counter-clockwise
+        if (rect < 3) then
+            normals[i] = Vector:create(-py, px)
+        else
+            normals[i] = Vector:create(py, -px)
+        end
     end
     return normals
 end
