@@ -50,12 +50,15 @@ function Field:update(dt)
         v[1] = v[1] - dbf                    -- always moving pipes backwards
         if (v[1] < -math.max(self.pipeWidth, self.pipeEndWidth)) then
             -- respawn pipe with random y (if it's not on screen anymore)
-            -- print(self.curr, self.last, self.pipes[self.last][1], self.distance)
             self.pipes[k] = self:randomPipe(self.pipes[self.last][1] + self.pipeDistance)
             self.last = self.curr
             self.curr = self.curr + 1
             if (self.curr > self.count) then
                 self.curr = 1
+            elseif (self.curr == 2) then
+                -- hotfix for issue #3
+                -- if (self.last > self.curr) basically
+                self.pipes[k][1] = self.pipes[k][1] - dbf
             end
         end
     end

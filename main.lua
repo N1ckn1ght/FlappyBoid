@@ -20,7 +20,7 @@ function love.load()
     }
 
     InitialX = 150
-    Difficulty = DifficultyPresets[2]
+    Difficulty = DifficultyPresets[6]
 
     Score = 0
     ActiveGame = true
