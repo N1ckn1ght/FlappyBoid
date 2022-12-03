@@ -1,8 +1,5 @@
-require "game"
 require "vector"
-require "boid"
-require "field"
-require "collisionDetector"
+require "game"
 
 function love.load()
     math.randomseed(os.time())
@@ -22,7 +19,7 @@ function love.load()
         {1100, 250, {450, Width    , 1,   300, 1,  1,   0,  0.003, 1500, 2, 15}}  -- Debug
     }
 
-    Game:create(DifficultyPresets[7], true)
+    Game:create(DifficultyPresets[2], true)
 end
 
 function love.update(dt)
