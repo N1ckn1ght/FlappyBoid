@@ -1,11 +1,11 @@
 CollisionDetector = {}
 CollisionDetector.__index = CollisionDetector
 
-function CollisionDetector:create(onCollision)
+function CollisionDetector:create(game)
     local collisionDetector = {}
     setmetatable(collisionDetector, CollisionDetector)
 
-    self.onCollision      = onCollision
+    self.game             = game
     self.trackablePlayers = {}
     self.trackableFields  = {}
     self.trackableBorders = {}
@@ -72,7 +72,7 @@ function CollisionDetector:bordersCollisionCheckOnPlayer(player, npps)
             end
 
             if (col) then
-                onCollision(player, {"border", border})
+                self.game:onCollision(player, {"border", border})
                 return true
             end
         end
@@ -113,7 +113,7 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
                         end
 
                         if (col) then
-                            onCollision(player, {"pipe", field, index, j})
+                            self.game:onCollision(player, {"pipe", field, index, j})
                             return true
                         end
                     end

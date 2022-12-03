@@ -5,17 +5,29 @@ function Field:create(velocity, initialDistance, pipeDistance, pipeGap, pipeWidt
     local field = {}
     setmetatable(field, Field)
 
+    -- Initial velocity of the field (pipes are mowing towards the player with this * dt speed)
     field.velocity         = velocity
+    -- Distance in pixels to first pipe pair (pipeDistance adds to this as well)
     field.initialDistance  = initialDistance
+    -- Distance in pixels between pairs of pipes (horizontal
     field.pipeDistance     = pipeDistance
+    -- Distance in pixels between pipes in pair (vertical)
     field.pipeGap          = pipeGap
+    -- Width of the pipe in pixels
     field.pipeWidth        = pipeWidth
+    -- Width of the pipe ending in pixels (it's better to be set to same or higher)
     field.pipeEndWidth     = pipeEndWidth
+    -- Height of the pipe ending in pixels
     field.pipeEndHeight    = pipeEndHeight
+    -- Acceleration, will be calculated by 1 of 2 formulas, should be higher than 0 or just 0
     field.acceleration     = acceleration      or 0
+    -- Maximum field velocity
     field.velocityLimit    = velocityLimit     or velocity
+    -- Acceleration formula, 1 for linear, 2 for logarithmic
     field.accelerationType = accelerationType  or 1
+    -- If pipeDistance is too small, this might be useful - maximum range by y of the next pipe gap, from -maxRandomGap to maxRandomGap
     field.maxRandomGap     = maxRandomGap      or false
+    
     field.pipe             = {}
     field.pipes            = {}
     field.curr             = 1
