@@ -1,7 +1,7 @@
 Field = {}
 Field.__index = Field
 
-function Field:create(velocity, initialDistance, pipeDistance, pipeGap, pipeWidth, pipeEndWidth, pipeEndHeight, acceleration, velocityLimit, accelerationType)
+function Field:create(velocity, initialDistance, pipeDistance, pipeGap, pipeWidth, pipeEndWidth, pipeEndHeight, acceleration, velocityLimit, accelerationType, maxRandomGap)
     local field = {}
     setmetatable(field, Field)
 
@@ -13,8 +13,9 @@ function Field:create(velocity, initialDistance, pipeDistance, pipeGap, pipeWidt
     field.pipeEndWidth     = pipeEndWidth
     field.pipeEndHeight    = pipeEndHeight
     field.acceleration     = acceleration      or 0
-    field.limit            = velocityLimit     or velocity
+    field.velocityLimit    = velocityLimit     or velocity
     field.accelerationType = accelerationType  or 1
+    field.maxRandomGap     = maxRandomGap      or false
     field.pipe             = {}
     field.pipes            = {}
     field.curr             = 1
@@ -33,9 +34,11 @@ function Field:init()
     self.pipe[3] = {-self.pipeWidth / 2,    -Height,                                -self.pipeWidth / 2,    -self.pipeGap / 2 - self.pipeEndHeight, self.pipeWidth / 2,    -self.pipeGap / 2 - self.pipeEndHeight, self.pipeWidth / 2,    -Height}
     self.pipe[4] = {-self.pipeEndWidth / 2, -self.pipeGap / 2 - self.pipeEndHeight, -self.pipeEndWidth / 2, -self.pipeGap / 2,                      self.pipeEndWidth / 2, -self.pipeGap / 2,                      self.pipeEndWidth / 2, -self.pipeGap / 2 - self.pipeEndHeight}
    
-    self.count = math.ceil((Width + math.max(self.pipeWidth, self.pipeEndWidth)) / self.pipeDistance + 1)
+    self.count = math.ceil((Width + math.max(self.pipeWidth, self.pipeEndWidth)) / self.pipeDistance) + 1
     for i = self.curr, self.count do
-        self.pipes[i] = self:randomPipe(self.initialDistance + i * self.pipeDistance)
+        self.pipes[i] = self:randomPipe(self.initialDistance + i * self.pipeDistance, true)
+        self.curr = i % self.count + 1
+        self.last = i
     end
     self.last = self.count
 end
@@ -47,6 +50,7 @@ function Field:update(dt)
         v[1] = v[1] - dbf                    -- always moving pipes backwards
         if (v[1] < -math.max(self.pipeWidth, self.pipeEndWidth)) then
             -- respawn pipe with random y (if it's not on screen anymore)
+            -- print(self.curr, self.last, self.pipes[self.last][1], self.distance)
             self.pipes[k] = self:randomPipe(self.pipes[self.last][1] + self.pipeDistance)
             self.last = self.curr
             self.curr = self.curr + 1
@@ -58,9 +62,9 @@ function Field:update(dt)
 
     -- 1 - linear, 2 - logarithmic
     if self.accelerationType == 1 then
-        self.velocity = math.max(self.velocity + self.acceleration * dt, self.limit)
+        self.velocity = math.max(self.velocity + self.acceleration * dt, self.velocityLimit)
     elseif self.accelerationType == 2 then
-        self.velocity = self.velocity + (self.limit - self.velocity) * math.min(self.acceleration * dt, 1)
+        self.velocity = self.velocity + (self.velocityLimit - self.velocity) * math.min(self.acceleration * dt, 1)
     end
 end
 
@@ -91,7 +95,13 @@ function Field:randomPipe(x)
     -- {x, y, color{red, green, blue}}
     -- x center is the pipeWidth / 2
     -- y center is the center of pipeGap
-    return {x, math.random() * (Height - self.pipeEndHeight * 2 - self.pipeGap * 2) + self.pipeEndHeight + self.pipeGap, {math.random(), math.random(), math.random()}}
+    if (self.maxRandomGap and self.last > 0) then
+        local low  = math.min(self.pipes[self.last][2] + self.maxRandomGap, Height - self.pipeEndHeight - self.pipeGap / 2)
+        local high = math.max(self.pipes[self.last][2] - self.maxRandomGap, self.pipeEndHeight + self.pipeGap / 2)
+        local rand = math.random() * (high - low)
+        return {x, low + rand, {math.random(), math.random(), math.random()}}
+    end
+    return {x, math.random() * (Height - self.pipeEndHeight * 2 - self.pipeGap) + self.pipeEndHeight + self.pipeGap / 2, {math.random(), math.random(), math.random()}}
 end
 
 -- Collision detection stuff --
