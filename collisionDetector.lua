@@ -43,33 +43,40 @@ function CollisionDetector:trackBorder(border)
 end
 
 function CollisionDetector:bordersCollisionCheckOnPlayer(player, npps)
-    -- for _, border in pairs(self.trackableBorders) do
-    --     local col = true
-    --     local border_proj = dotProduct(Vector:create(dot.x, dot.y), axis)
-    --     for k = 1, #player.hitboxes do
-    --         local npp = npps[k]
+    for _, border in pairs(self.trackableBorders) do
+        local col = true
+        
+        local px = border[2].x - border[1].x
+        local py = border[2].y - border[1].y
+        local borderNormal = Vector:create(-py, px)
 
-    --         for k1, np in pairs({npp, npf}) do
-    --             for k2, v in pairs(np) do
-    --                 local p = player:getMinMaxProj(k, v)
-    --                 local q = field:getMinMaxProj(index, j, v)
+        for k = 1, #player.hitboxes do
+            local npp = npps[k]
 
-    --                 if ((p[2] < q[1]) or (q[2] < p[1])) then
-    --                     col = false
-    --                     break
-    --                 end
-    --             end
-    --             if (not col) then
-    --                 break
-    --             end
-    --         end
+            local p = player:getMinMaxProj(k, borderNormal)
+            local q = {math.min(dotProduct(Vector:create(border[1].x, border[1].y), borderNormal), dotProduct(Vector:create(border[2].x, border[2].y), borderNormal)),
+                       math.max(dotProduct(Vector:create(border[1].x, border[1].y), borderNormal), dotProduct(Vector:create(border[2].x, border[2].y), borderNormal))}
+            if ((p[2] < q[1]) or (q[2] < p[1])) then
+                col = false
+                break
+            end
+            
+            for _, v in pairs(npp) do
+                local p = player:getMinMaxProj(k, v)
+                local q = {math.min(dotProduct(Vector:create(border[1].x, border[1].y), v), dotProduct(Vector:create(border[2].x, border[2].y), v)),
+                            math.max(dotProduct(Vector:create(border[1].x, border[1].y), v), dotProduct(Vector:create(border[2].x, border[2].y), v))}
+                if ((p[2] < q[1]) or (q[2] < p[1])) then
+                    col = false
+                    break
+                end
+            end
 
-    --         if (col) then
-    --             onCollision(player, {"border", border})
-    --             return true
-    --         end
-    --     end
-    -- end
+            if (col) then
+                onCollision(player, {"border", border})
+                return true
+            end
+        end
+    end
 end
 
 function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
@@ -90,8 +97,8 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
                     for k = 1, #player.hitboxes do
                         local npp = npps[k]
 
-                        for k1, np in pairs({npp, npf}) do
-                            for k2, v in pairs(np) do
+                        for _, np in pairs({npp, npf}) do
+                            for _, v in pairs(np) do
                                 local p = player:getMinMaxProj(k, v)
                                 local q = field:getMinMaxProj(index, j, v)
 
