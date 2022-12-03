@@ -45,22 +45,36 @@ end
 
 function Field:update(dt)
     local dbf = dt * self.velocity
-    self.distance = self.distance + dbf  -- general distance counter
-    for k, v in pairs(self.pipes) do
-        v[1] = v[1] - dbf                    -- always moving pipes backwards
-        if (v[1] < -math.max(self.pipeWidth, self.pipeEndWidth)) then
+    -- general distance counter (e.g. for counting score, it'd be good to divide distance by pipeDistance)
+    self.distance = self.distance + dbf
+
+    local curr = self.curr
+    local first = true
+
+    for i = 1, self.count do
+        local index = (i + curr - 2) + 1
+        if (index > self.count) then
+            index = index - self.count
+        end
+
+        -- always moving pipes backwards
+        self.pipes[index][1] = self.pipes[index][1] - dbf
+        if (self.pipes[index][1] < -math.max(self.pipeWidth, self.pipeEndWidth)) then
             -- respawn pipe with random y (if it's not on screen anymore)
-            self.pipes[k] = self:randomPipe(self.pipes[self.last][1] + self.pipeDistance)
-            self.last = self.curr
+            self.pipes[index] = self:randomPipe(self.pipes[self.last][1] + self.pipeDistance)
+            if (first) then
+                self.pipes[index][1] = self.pipes[index][1] - dbf
+                first = false
+            end
             self.curr = self.curr + 1
-            if (self.curr > self.count) then
-                self.curr = 1
-            elseif (self.curr == 2) then
-                -- hotfix for issue #3
-                -- if (self.last > self.curr) basically
-                self.pipes[k][1] = self.pipes[k][1] - dbf
+            self.last = self.last + 1
+            if (self.last > self.count) then
+                self.last = 1
             end
         end
+    end
+    if (self.curr > self.count) then
+        self.curr = self.curr - self.count
     end
 
     -- 1 - linear, 2 - logarithmic

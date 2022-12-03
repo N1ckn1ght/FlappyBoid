@@ -15,7 +15,13 @@ end
 
 function CollisionDetector:update()
     for _, player in pairs(self.trackablePlayers) do
-        if (self:fieldsCollisionCheckOnPlayer(player) or self:bordersCollisionCheckOnPlayer(player)) then
+        -- distinct player boid to convex parts
+        local npps = {}
+        for i = 1, #player.hitboxes do
+            npps[i] = player:getNormals(i)
+        end
+
+        if (self:fieldsCollisionCheckOnPlayer(player, npps) or self:bordersCollisionCheckOnPlayer(player, npps)) then
             -- gimmick condition
         end
     end
@@ -36,47 +42,73 @@ function CollisionDetector:trackBorder(border)
     self.trackableBorders[#self.trackableBorders + 1] = border
 end
 
-function CollisionDetector:bordersCollisionCheckOnPlayer(player)
-    return false
+function CollisionDetector:bordersCollisionCheckOnPlayer(player, npps)
+    -- for _, border in pairs(self.trackableBorders) do
+    --     local col = true
+    --     local border_proj = dotProduct(Vector:create(dot.x, dot.y), axis)
+    --     for k = 1, #player.hitboxes do
+    --         local npp = npps[k]
+
+    --         for k1, np in pairs({npp, npf}) do
+    --             for k2, v in pairs(np) do
+    --                 local p = player:getMinMaxProj(k, v)
+    --                 local q = field:getMinMaxProj(index, j, v)
+
+    --                 if ((p[2] < q[1]) or (q[2] < p[1])) then
+    --                     col = false
+    --                     break
+    --                 end
+    --             end
+    --             if (not col) then
+    --                 break
+    --             end
+    --         end
+
+    --         if (col) then
+    --             onCollision(player, {"border", border})
+    --             return true
+    --         end
+    --     end
+    -- end
 end
 
-function CollisionDetector:fieldsCollisionCheckOnPlayer(player)
-    -- distinct player boid to convex parts
-    local npps = {}
-    for i = 1, #player.hitboxes do
-        npps[i] = player:getNormals(i)
-    end
-
+function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
     for _, field in pairs(self.trackableFields) do
         -- cycling through all pipe pairs, starting from field.curr
         for i = 1, field.count do
             local index = (i + field.curr - 2) % field.count + 1
-            -- now cycling through all parts of given pipe pair (2 for lower, 2 for upper)
-            for j = 1, #field.pipe do
-                local npf = field:getNormals(index, j)
-                col = true
-                -- now cycling thourgh distinct convex part of player
-                for k = 1, #player.hitboxes do
-                    local npp = npps[k]
+            -- fast checking
+            if     (field.pipes[index][1] - math.max(field.pipeEndWidth, field.pipeWidth) / 2 >  player.size * player.k + player.location.x) then
+                return false
+            end
+            if not (field.pipes[index][1] + math.max(field.pipeEndWidth, field.pipeWidth) / 2 < -player.size * player.k + player.location.x) then
+                -- now cycling through all parts of given pipe pair (2 for lower, 2 for upper)
+                for j = 1, #field.pipe do
+                    local npf = field:getNormals(index, j)
+                    col = true
+                    -- now cycling thourgh distinct convex part of player
+                    for k = 1, #player.hitboxes do
+                        local npp = npps[k]
 
-                    for k1, np in pairs({npp, npf}) do
-                        for k2, v in pairs(np) do
-                            local p = player:getMinMaxProj(k, v)
-                            local q = field:getMinMaxProj(index, j, v)
+                        for k1, np in pairs({npp, npf}) do
+                            for k2, v in pairs(np) do
+                                local p = player:getMinMaxProj(k, v)
+                                local q = field:getMinMaxProj(index, j, v)
 
-                            if ((p[2] < q[1]) or (q[2] < p[1])) then
-                                col = false
+                                if ((p[2] < q[1]) or (q[2] < p[1])) then
+                                    col = false
+                                    break
+                                end
+                            end
+                            if (not col) then
                                 break
                             end
                         end
-                        if (not col) then
-                            break
-                        end
-                    end
 
-                    if (col) then
-                        onCollision(player, field, index, j)
-                        return true
+                        if (col) then
+                            onCollision(player, {"pipe", field, index, j})
+                            return true
+                        end
                     end
                 end
             end
