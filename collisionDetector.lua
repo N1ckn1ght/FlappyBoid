@@ -29,6 +29,7 @@ end
 
 function CollisionDetector:trackPlayer(player)
     -- Will require such fields, as: hitboxes (reference to vertices), getVertice(n) with absolute positioning including angle calculations.
+    -- Now also requires .size and .k for optimization purposes (basically, it needs to know maximum possible boid deviation by x (location.x +- size * k))
     self.trackablePlayers[#self.trackablePlayers + 1] = player
 end
 
