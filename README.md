@@ -10,11 +10,13 @@ Only mouse works:
 
 **MMB** for pause.
 
+Navigate through menu by mouse as well.
+
 ### Demonstration
 
 There're a lot of game modes.
 
-https://www.youtube.com/watch?v=2ox4L14E_F4
+https://www.youtube.com/watch?v=ZAl5vmRbxI8
 
 https://www.youtube.com/watch?v=I1ebQk9hJZk
 
