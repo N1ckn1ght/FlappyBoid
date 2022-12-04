@@ -12,7 +12,7 @@ function Boid:create(x, y, size, k)
     boid.size         = size
     boid.k            = k
     boid.vertices     = {0, -size * k, -size, size * k, 0, size, size, size * k}
-    boid.hitboxes     = {{3, 1, 2}, {1, 4, 3}}
+    boid.hitboxes     = {{3, 2, 1}, {1, 4, 3}}
     boid.color        = {0, 1, 1, 1}
 
     return boid
