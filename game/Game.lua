@@ -8,7 +8,7 @@ Game.__index = Game
 function Game:create(difficulty)
     local game = {}
     setmetatable(game, Game)
-    self:init(difficulty)
+    game:init(difficulty)
     return game
 end
 
@@ -32,7 +32,7 @@ end
 
 function Game:update(dt)
     self.boid:applyForce(Vector:create(0, self.g) * dt)
-    self.boid:update(dt)
+    self.boid:update(dt, self.field.velocity)
     self.field:update(dt)
     self.collisionDetector:update()
     self.time = self.time + dt

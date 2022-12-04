@@ -12,15 +12,18 @@ function Boid:create(x, y, size, k)
     boid.size         = size
     boid.k            = k
     boid.vertices     = {0, -size * k, -size, size * k, 0, size, size, size * k}
+    -- TODO: fix hitboxes for CollisionDetector; make them array of coordinates (e.g. like vertices (as they should be)), hard to edit code properly.
     boid.hitboxes     = {{3, 2, 1}, {1, 4, 3}}
     boid.color        = {0, 1, 1, 1}
 
     return boid
 end
 
-function Boid:update(dt)
-    self.velocity:add(self.acceleration)
-    self.location:add(self.velocity * dt)
+function Boid:update(dt, fieldVelocity)
+    -- Previous solution was to use fake velocity in order to make gamer harder on high Field speed
+    self.velocity.x = fieldVelocity or 300
+    self.velocity.y = self.velocity.y + self.acceleration.y
+    self.location.y = self.location.y + self.velocity.y * dt
     self.acceleration:mul(0)
     
     if (self.location.y > Height) then
@@ -30,8 +33,7 @@ function Boid:update(dt)
 end
 
 function Boid:draw()
-    local fakeVelocity = Vector:create(300, self.velocity.y)
-    self.angle = fakeVelocity:heading() + math.pi * 0.5
+    self.angle = self.velocity:heading() + math.pi * 0.5
     -- save coordinate system
     love.graphics.push()
     love.graphics.translate(self.location.x, self.location.y)
