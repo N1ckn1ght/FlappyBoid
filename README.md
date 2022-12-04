@@ -48,6 +48,6 @@ While playing on Fast you should know that gap, in fact, plays much lesser role 
 
 **Dense** - Boid behaves like at Fast but even less controllable, however here this is a good thing. Pipes are making solid, continuous corridor. There's no distance between them at all, however, gap random is kinda restricted here to make it possible to play. Starting speed is 1.8x from Normal, pipe gaps are bigger.
 
-**Cave** - Almost like Dense but even less sane, every pipe in corridor is 8px wide. Boid starting speed is normal, but it behaves like at Dense. Random is RELATIVELY less restricted.
+**Cave** - Almost like Dense but even less sane, every pipe in corridor is 6px wide. Boid starting speed is normal, but it behaves like at Dense. Random is RELATIVELY less restricted.
 
 **Debug** - The true cave. Will probably replace the current Cave difficulty in the future. It was used as an extreme case for debugging, but now it seem to have better perfomance than mentioned Cave difficulty. Every pipe here is just 1px wide. Boid behaves like at Dense.
