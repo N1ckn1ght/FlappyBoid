@@ -1,6 +1,6 @@
-require "boid"
-require "field"
-require "collisionDetector"
+require "game.boid"
+require "game.field"
+require "game.collisionDetector"
 
 Game = {}
 Game.__index = Game
