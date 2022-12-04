@@ -5,14 +5,14 @@ require "game.collisionDetector"
 Game = {}
 Game.__index = Game
 
-function Game:create(difficulty, start)
+function Game:create(difficulty)
     local game = {}
     setmetatable(game, Game)
-    self:init(difficulty, start)
+    self:init(difficulty)
     return game
 end
 
-function Game:init(difficulty, start)
+function Game:init(difficulty)
     self.difficulty = difficulty or self.difficulty
     self.initialX = 150
     self.score = 0
@@ -27,44 +27,42 @@ function Game:init(difficulty, start)
     self.collisionDetector:trackField(self.field)
     self.collisionDetector:trackBorder({Vector:create(0, 0), Vector:create(Width, 0)})
     self.collisionDetector:trackBorder({Vector:create(0, Height), Vector:create(Width, Height)})
-    self.activeGame = false or start
-    self.drawGame = false or start
+    self.time = 0
 end
 
 function Game:update(dt)
-    if self.activeGame then
-        self.boid:applyForce(Vector:create(0, self.g) * dt)
-        self.boid:update(dt)
-        self.field:update(dt)
-        self.collisionDetector:update()
-    end
+    self.boid:applyForce(Vector:create(0, self.g) * dt)
+    self.boid:update(dt)
+    self.field:update(dt)
+    self.collisionDetector:update()
+    self.time = self.time + dt
 end
 
 function Game:draw()
-    if self.drawGame then
-        self.boid:draw()
-        self.field:draw()
-    end
+    self.boid:draw()
+    self.field:draw()
 end
 
 function Game:onLMB()
-    if self.activeGame then
-        self.boid.velocity.y = -self.velocityOnClick
-        SoundWing:stop()
-        SoundWing:play()
-    end
+    self.boid.velocity.y = -self.velocityOnClick
+    SoundWing:stop()
+    SoundWing:play()
 end
 
 function Game:onRMB()
-    if self.activeGame then
-        self.boid.velocity.y = -self.velocityOnClick2
-        SoundWing:stop()
-        SoundWing:play()
-    end
+    self.boid.velocity.y = -self.velocityOnClick2
+    SoundWing:stop()
+    SoundWing:play()
 end
 
 function Game:onCollision(boid, cause)
-    self.activeGame = false
     boid.color = {1, 0, 0, 1}
     SoundHit:play()
+    -- This refers to main.lua; state of Game = 2, state of Pause Screen = 3, state of End Screen = 4.
+    State = 4
+    -- Debug print
+    print("Collision had happened!\nCause:")
+    for _, v in pairs(cause) do
+        print(v)
+    end
 end
