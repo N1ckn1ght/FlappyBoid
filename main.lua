@@ -1,6 +1,6 @@
 require "vector"
-require "game.game"
-require "interface.menu"
+require "game.Game"
+require "interface.Menu"
 
 function love.load()
     math.randomseed(os.time())
