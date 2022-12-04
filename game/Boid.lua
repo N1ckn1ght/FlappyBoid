@@ -12,7 +12,7 @@ function Boid:create(x, y, size, k)
     boid.size         = size
     boid.k            = k
     boid.vertices     = {0, -size * k, -size, size * k, 0, size, size, size * k}
-    boid.hitboxes     = {{1, 3, 2}, {1, 4, 3}}
+    boid.hitboxes     = {{3, 1, 2}, {1, 4, 3}}
     boid.color        = {0, 1, 1, 1}
 
     return boid
@@ -31,7 +31,7 @@ end
 
 function Boid:draw()
     local fakeVelocity = Vector:create(300, self.velocity.y)
-    self.angle = fakeVelocity:heading() + math.pi / 2
+    self.angle = fakeVelocity:heading() + math.pi * 0.5
     -- save coordinate system
     love.graphics.push()
     love.graphics.translate(self.location.x, self.location.y)
@@ -59,12 +59,12 @@ function Boid:getNormals(part)
     local normals = {}
     local current_dot = nil
     local previous_dot = nil
-    for i = 1, #self.hitboxes[part] do
-        previous_dot = current_dot or self:getDot(self.hitboxes[part][#self.hitboxes[part]])
+    for i = 2, #self.hitboxes[part] do
+        previous_dot = current_dot or self:getDot(self.hitboxes[part][1])
         current_dot = self:getDot(self.hitboxes[part][i])
         local px = current_dot.x - previous_dot.x
         local py = current_dot.y - previous_dot.y
-        normals[i] = Vector:create(-py, px)
+        normals[i - 1] = Vector:create(-py, px)
     end
     return normals
 end

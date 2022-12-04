@@ -73,7 +73,7 @@ function CollisionDetector:bordersCollisionCheckOnPlayer(player, npps)
             end
 
             if (col) then
-                self.game:onCollision(player, {"border", border})
+                self.game:onCollision(player, {"border", k, border})
                 return true
             end
         end
@@ -86,16 +86,16 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
         for i = 1, field.count do
             local index = (i + field.curr - 2) % field.count + 1
             -- fast checking
-            if     (field.pipes[index][1] - math.max(field.pipeEndWidth, field.pipeWidth) / 2 >  player.size * player.k + player.location.x) then
+            if     (field.pipes[index][1] - math.max(field.pipeEndWidth, field.pipeWidth) * 0.5 >  player.size * player.k + player.location.x) then
                 return false
             end
-            if not (field.pipes[index][1] + math.max(field.pipeEndWidth, field.pipeWidth) / 2 < -player.size * player.k + player.location.x) then
+            if not (field.pipes[index][1] + math.max(field.pipeEndWidth, field.pipeWidth) * 0.5 < -player.size * player.k + player.location.x) then
                 -- now cycling through all parts of given pipe pair (2 for lower, 2 for upper)
                 for j = 1, #field.pipe do
                     local npf = field:getNormals(index, j)
-                    col = true
                     -- now cycling thourgh distinct convex part of player
                     for k = 1, #player.hitboxes do
+                        col = true
                         local npp = npps[k]
 
                         for _, np in pairs({npp, npf}) do
@@ -114,7 +114,7 @@ function CollisionDetector:fieldsCollisionCheckOnPlayer(player, npps)
                         end
 
                         if (col) then
-                            self.game:onCollision(player, {"pipe", field, index, j})
+                            self.game:onCollision(player, {"pipe", k, field, index, j})
                             return true
                         end
                     end

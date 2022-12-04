@@ -40,11 +40,11 @@ end
 
 function Field:init()
     -- lower pipe, 1 - base, 2 - end
-    self.pipe[1] = {-self.pipeWidth / 2,     Height,                                -self.pipeWidth / 2,     self.pipeGap / 2 + self.pipeEndHeight, self.pipeWidth / 2,     self.pipeGap / 2 + self.pipeEndHeight, self.pipeWidth / 2,     Height}
-    self.pipe[2] = {-self.pipeEndWidth / 2,  self.pipeGap / 2 + self.pipeEndHeight, -self.pipeEndWidth / 2,  self.pipeGap / 2,                      self.pipeEndWidth / 2,  self.pipeGap / 2,                      self.pipeEndWidth / 2,  self.pipeGap / 2 + self.pipeEndHeight}
+    self.pipe[1] = {-self.pipeWidth * 0.5,     Height,                                  -self.pipeWidth * 0.5,     self.pipeGap * 0.5 + self.pipeEndHeight, self.pipeWidth * 0.5,     self.pipeGap * 0.5 + self.pipeEndHeight, self.pipeWidth * 0.5,     Height}
+    self.pipe[2] = {-self.pipeEndWidth * 0.5,  self.pipeGap * 0.5 + self.pipeEndHeight, -self.pipeEndWidth * 0.5,  self.pipeGap * 0.5,                      self.pipeEndWidth * 0.5,  self.pipeGap * 0.5,                      self.pipeEndWidth * 0.5,  self.pipeGap * 0.5 + self.pipeEndHeight}
     -- upper pipe, 3 - base, 4 - end
-    self.pipe[3] = {-self.pipeWidth / 2,    -Height,                                -self.pipeWidth / 2,    -self.pipeGap / 2 - self.pipeEndHeight, self.pipeWidth / 2,    -self.pipeGap / 2 - self.pipeEndHeight, self.pipeWidth / 2,    -Height}
-    self.pipe[4] = {-self.pipeEndWidth / 2, -self.pipeGap / 2 - self.pipeEndHeight, -self.pipeEndWidth / 2, -self.pipeGap / 2,                      self.pipeEndWidth / 2, -self.pipeGap / 2,                      self.pipeEndWidth / 2, -self.pipeGap / 2 - self.pipeEndHeight}
+    self.pipe[3] = {-self.pipeWidth * 0.5,    -Height,                                  -self.pipeWidth * 0.5,    -self.pipeGap * 0.5 - self.pipeEndHeight, self.pipeWidth * 0.5,    -self.pipeGap * 0.5 - self.pipeEndHeight, self.pipeWidth * 0.5,    -Height}
+    self.pipe[4] = {-self.pipeEndWidth * 0.5, -self.pipeGap * 0.5 - self.pipeEndHeight, -self.pipeEndWidth * 0.5, -self.pipeGap * 0.5,                      self.pipeEndWidth * 0.5, -self.pipeGap * 0.5,                      self.pipeEndWidth * 0.5, -self.pipeGap * 0.5 - self.pipeEndHeight}
    
     self.count = math.ceil((Width + math.max(self.pipeWidth, self.pipeEndWidth)) / self.pipeDistance) + 1
     for i = self.curr, self.count do
@@ -122,15 +122,15 @@ end
 
 function Field:randomPipe(x)
     -- {x, y, color{red, green, blue}}
-    -- x center is the pipeWidth / 2
+    -- x center is the pipeWidth * 0.5
     -- y center is the center of pipeGap
     if (self.maxRandomGap and self.last > 0) then
-        local low  = math.min(self.pipes[self.last][2] + self.maxRandomGap, Height - self.pipeEndHeight - self.pipeGap / 2)
-        local high = math.max(self.pipes[self.last][2] - self.maxRandomGap, self.pipeEndHeight + self.pipeGap / 2)
+        local low  = math.min(self.pipes[self.last][2] + self.maxRandomGap, Height - self.pipeEndHeight - self.pipeGap * 0.5)
+        local high = math.max(self.pipes[self.last][2] - self.maxRandomGap, self.pipeEndHeight + self.pipeGap * 0.5)
         local rand = math.random() * (high - low)
         return {x, low + rand, {math.random(), math.random(), math.random()}}
     end
-    return {x, math.random() * (Height - self.pipeEndHeight * 2 - self.pipeGap) + self.pipeEndHeight + self.pipeGap / 2, {math.random(), math.random(), math.random()}}
+    return {x, math.random() * (Height - self.pipeEndHeight * 2 - self.pipeGap) + self.pipeEndHeight + self.pipeGap * 0.5, {math.random(), math.random(), math.random()}}
 end
 
 -- Collision detection stuff --
@@ -139,8 +139,8 @@ function Field:getNormals(index, rect)
     local normals = {}
     local current_dot = nil
     local previous_dot = nil
-    for i = 1, #self.pipe[rect] / 2 do
-        previous_dot = current_dot or self:getDot(index, rect, #self.pipe[rect] / 2)
+    for i = 1, #self.pipe[rect] * 0.5 do
+        previous_dot = current_dot or self:getDot(index, rect, #self.pipe[rect] * 0.5)
         current_dot = self:getDot(index, rect, i)
         local px = current_dot.x - previous_dot.x
         local py = current_dot.y - previous_dot.y
@@ -159,7 +159,7 @@ function Field:getMinMaxProj(index, rect, axis)
     local dot = self:getDot(index, rect, 1)
     local min_proj = dotProduct(Vector:create(dot.x, dot.y), axis)
     local max_proj = min_proj
-    for i = 2, #self.pipe[rect] / 2 do
+    for i = 2, #self.pipe[rect] * 0.5 do
         dot = self:getDot(index, rect, i)
         local curr_proj = dotProduct(Vector:create(dot.x, dot.y), axis)
         if (curr_proj < min_proj) then

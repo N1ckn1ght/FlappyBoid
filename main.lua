@@ -14,13 +14,13 @@ function love.load()
     DifficultyPresets = {
      -- Advanced description lies in the Field.create method
      -- {G, VelocityOnClick, VelocityOnClick2, {Velocity, InitialDistance, pipeDistance, pipeGap, pipeWidth, pipeEndWidth, pipeEndHeight, acceleration, velocityLimit, accelerationType, gapSubtract, gapLimit, maxRandomGap (experimental)}}
-        {1520, 520, {250, Width / 2, 550, 180, 65, 72,  30, 0.003, 1000, 2}},     -- Easy
-        {1520, 520, {250, Width / 2, 500, 150, 60, 80,  30, 0.003, 1000, 2}},     -- Normal
-        {2000, 666, {250, Width / 2, 450, 140, 60, 80,  30, 0.006, 1000, 2}},     -- Hard
-        {1240, 400, {800, Width / 2, 950, 100, 60, 66,  30, 0.003, 2000, 2}},     -- Fast
-        {1520, 520, {250, Width / 2, 550, 150, 60, 300, 30, 0.003, 1500, 2}},     -- Flat
-        {1100, 250, {450, Width    , 60,  180, 60, 60,  30, 0.003, 1500, 2, 60}}, -- Dense
-        {1100, 250, {450, Width    , 1,   300, 1,  1,   0,  0.003, 1500, 2, 15}}  -- Debug
+        {1520, 520, {250, Width * 0.5, 550, 180, 65, 72,  30, 0.003, 1000, 2}},     -- Easy
+        {1520, 520, {250, Width * 0.5, 500, 150, 60, 80,  30, 0.003, 1000, 2}},     -- Normal
+        {2000, 666, {250, Width * 0.5, 450, 140, 60, 80,  30, 0.006, 1000, 2}},     -- Hard
+        {1240, 400, {800, Width * 0.5, 950, 100, 60, 66,  30, 0.003, 2000, 2}},     -- Fast
+        {1520, 520, {250, Width * 0.5, 550, 150, 60, 300, 30, 0.003, 1500, 2}},     -- Flat
+        {1100, 250, {450, Width      , 60,  180, 60, 60,  30, 0.003, 1500, 2, 60}}, -- Dense
+        {1100, 250, {450, Width      , 1,   300, 1,  1,   0,  0.003, 1500, 2, 15}}  -- Debug
     }
 
     MainMenu = Menu:create({{{"Easy", 1}, {"Normal", 2}, {"Hard", 3}}, {{"Fast", 4}, {"Flat", 5}, {"Dense", 6}, {"Debug", 7}}, {}, {}, {{"Records"}, {"Help"}, {"Exit"}}})
