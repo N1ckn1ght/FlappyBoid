@@ -1,5 +1,5 @@
 require "vector"
-require "game"
+require "game/game"
 
 function love.load()
     math.randomseed(os.time())
