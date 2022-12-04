@@ -33,7 +33,7 @@ function Boid:update(dt, fieldVelocity)
 end
 
 function Boid:draw()
-    self.angle = self.velocity:heading() + math.pi * 0.5
+    self.angle = math.max(self.velocity:heading() + math.pi * 0.5, 1.047)
     -- save coordinate system
     love.graphics.push()
     love.graphics.translate(self.location.x, self.location.y)

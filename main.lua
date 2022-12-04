@@ -14,19 +14,17 @@ function love.load()
     DifficultyPresets = {
      -- Advanced description lies in the Field.create method
      -- {G, VelocityOnClick, VelocityOnClick2, {Velocity, InitialDistance, pipeDistance, pipeGap, pipeWidth, pipeEndWidth, pipeEndHeight, acceleration, velocityLimit, accelerationType, gapSubtract, gapLimit, maxRandomGap (experimental)}}
-        {1520, 520, {250, Width * 0.5, 500, 150, 60, 66,  30, 0.004, 1200, 2}},     -- Easy
-        {1520, 520, {250, Width * 0.5, 450, 140, 60, 80,  30, 0.004, 1200, 2}},     -- Normal
-        {2000, 666, {250, Width * 0.5, 450, 140, 60, 80,  30, 0.004, 1200, 2}},     -- Normal+
-        {2000, 666, {250, Width * 0.5, 400, 130, 70, 82,  30, 0.004, 1200, 2}},     -- Hard
+        {1520, 520, {250, Width * 0.5, 500, 135, 60, 66,  30, 0.004, 1200, 2}},     -- Easy
+        {1520, 520, {250, Width * 0.5, 450, 125, 60, 80,  30, 0.004, 1200, 2}},     -- Normal
+        {2000, 666, {250, Width * 0.5, 400, 125, 60, 80,  30, 0.004, 1200, 2}},     -- Hard
         {1240, 400, {800, Width * 0.5, 950, 100, 60, 66,  30, 0.004, 2000, 2}},     -- Fast
-        {1520, 520, {250, Width * 0.5, 550, 150, 60, 300, 30, 0.004, 1500, 2}},     -- Flat
-        {1100, 250, {450, Width      , 60,  180, 60, 60,  30, 0.004, 1500, 2, 60}}, -- Dense
-        {1100, 250, {250, Width      , 6,   240, 6,  6,   20, 0.004, 1000, 2, 36}}, -- Cave
-        {1100, 250, {450, Width      , 1,   300, 1,  1,   0,  0.004, 1500, 2, 15}}  -- Debug
+        {1520, 520, {250, Width * 0.5, 550, 135, 60, 300, 30, 0.004, 1500, 2}},     -- Flat
+        {1100, 250, {450, Width      , 60,  185, 60, 60,  30, 0.004, 1500, 2, 60}}, -- Dense
+        {1100, 250, {450, Width      , 1,   300, 1,  1,   0,  0.004, 1500, 2, 15}}  -- Cave
     }
 
     PlayGame = nil
-    MainMenu = Menu:create({{{"Easy", 1}, {"Normal", 2}, {"Hard", 3}, {"Insane", 4}}, {{"Fast", 5}, {"Dense", 7}}, {{"Flat\n(funny)", 6}, {"Cave\n(unfair)", 8}, {"Debug\n(unstable)", 9}}, {}, {{"Records"}, {"Help"}, {}, {"Exit"}}})
+    MainMenu = Menu:create({{{"Easy", 1}, {"Normal", 2}, {"Hard", 3}, {"Fast", 4}}, {{"Flat", 5}, {"Dense", 6}, {"Cave", 7}}, {{}}, {{}}, {{"Records"}, {"Help"}, {}, {"Exit"}}})
     LoseMenu = Menu:create({{{}}, {{}}, {{}}, {{}}, {{}}, {{}}, {{"Restart"}, {"Menu"}}}, 18, Width, 120, 0, 0, 6, 6, 0.7)
 end
 
